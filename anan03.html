@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>陳安安美食指南</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            transition: margin-left 0.3s;
+        }
+
+        /* 左側選單 */
+        .sidebar {
+            width: 250px;
+            background-color: #333;
+            color: white;
+            height: 100vh;
+            position: fixed;
+            transition: width 0.3s;
+        }
+
+        .sidebar.collapsed {
+            width: 60px;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 20px 0;
+        }
+
+        .sidebar ul li {
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar ul li:hover {
+            background-color: #575757;
+        }
+
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            display: block;
+        }
+
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+            transition: margin-left 0.3s;
+        }
+
+        .content.expanded {
+            margin-left: 60px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .dropdown {
+            margin-bottom: 10px;
+        }
+
+        .dropdown select {
+            width: 200px;
+            padding: 5px;
+        }
+
+        .details {
+            margin-top: 20px;
+        }
+
+        .section {
+            margin-top: 20px;
+        }
+
+        #home img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin-top: 20px;
+        }
+
+        /* 修改左側選單按鈕樣式，讓按鈕更大 */
+        .toggle-btn {
+            position: absolute;
+            top: 20px;
+            right: -30px; /* 按鈕的位置調整 */
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 20px 25px; /* 增加按鈕大小 */
+            font-size: 24px; /* 增加文字大小 */
+            cursor: pointer;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+
+        .toggle-btn:hover {
+            background-color: #444; /* 鼠標懸停時變色 */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 左側選單 -->
+    <div class="sidebar" id="sidebar">
+        <button class="toggle-btn" id="toggle-btn">≡</button>
+        <ul>
+            <li><a href="#" data-target="home">首頁</a></li>
+            <li><a href="#" data-target="breakfast">早餐</a></li>
+            <li><a href="#" data-target="lunch">午餐</a></li>
+            <li><a href="#" data-target="dinner">晚餐</a></li>
+        </ul>
+    </div>
+
+    <!-- 主體內容區域 -->
+    <div class="content" id="content">
+        <!-- 首頁 -->
+        <div id="home" class="section">
+            <h1>台南佳里</h1>
+            <p>這座充滿人情味的小鎮，被美食溫暖灌溉著。佳里美食玲瑯滿目，</p>
+
+            <p> 為了讓大家更方便找到我親自品嘗、誠心推薦的美食，</p>
+                
+            <p>特地創建了這個網站。</p>
+                
+            <p>希望每當您在找尋新口味、或無法決定下一餐食，都能在這裡發現一個合適的選擇。</p>
+            <img src="jali.jpeg" alt="ＰＩＣＴＵＲＥ">
+        </div>
+
+        <!-- 早餐 -->
+        <div id="breakfast" class="section hidden">
+            <h2>早餐選擇</h2>
+            <div class="dropdown">
+                <label for="breakfast-options">選擇早餐分類：</label>
+                <select id="breakfast-options">
+                    <option value="">-- 請選擇 --</option>
+                    <option value="noodles">麵食</option>
+                    <option value="rice">飯食</option>
+                    <option value="other">其他</option>
+                </select>
+            </div>
+            <div id="breakfast-details" class="details hidden"></div>
+        </div>
+
+        <!-- 午餐 -->
+        <div id="lunch" class="section hidden">
+            <h2>午餐選擇</h2>
+            <div class="dropdown">
+                <label for="lunch-options">選擇午餐分類：</label>
+                <select id="lunch-options">
+                    <option value="">-- 請選擇 --</option>
+                    <option value="noodles">麵食</option>
+                    <option value="rice">飯食</option>
+                    <option value="other">其他</option>
+                </select>
+            </div>
+            <div id="lunch-details" class="details hidden"></div>
+        </div>
+
+        <!-- 晚餐 -->
+        <div id="dinner" class="section hidden">
+            <h2>晚餐選擇</h2>
+            <div class="dropdown">
+                <label for="dinner-options">選擇晚餐分類：</label>
+                <select id="dinner-options">
+                    <option value="">-- 請選擇 --</option>
+                    <option value="noodles">麵食</option>
+                    <option value="rice">飯食</option>
+                    <option value="other">其他</option>
+                </select>
+            </div>
+            <div id="dinner-details" class="details hidden"></div>
+        </div>
+    </div>
+
+    <script>
+        const sections = document.querySelectorAll('.section');
+        const sidebarLinks = document.querySelectorAll('.sidebar a');
+        const dropdowns = [
+            { id: 'breakfast-options', detailsId: 'breakfast-details', data: { noodles: '早餐麵食：義民街富林早點  地點：722台南市佳里區義民街233號　（推薦鍋燒意麵　　湯頭甘醇，小店溫馨　））　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　客來堡佳里仁愛店 722台南市佳里區中山路1號 一樣鍋燒意麵讚的　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　佳里米苔目　地點：722台南市佳里區中山路中山零售菜市場A12　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　佳里文化早餐店　地點：722台南市佳里區文化路326號　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　菩提園素食館　地點： 722台南市佳里區新生路331號　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　無名陽春麵-臺南佳里　地點：722台南市佳里區新生路9號　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　佳里文化早餐店　地點： 722台南市佳里區文化路326號　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　菇morning蔬食餐飲連鎖-佳里店　地點： 722台南市佳里區延平路166號　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　139咖啡早點　地點：722011台南市佳里區成功路139巷　'
+            , rice: '早餐飯食：福音肉燥飯海產粥 地點：722台南市佳里區光復路280號　　（通通都好吃都是讚的）　　　　　　　　　　　　　　　　　　　　萬林牛肉湯　地址：722台南市佳里區延平路181號　　我吃過最好吃的牛肉湯店　（肉燥飯內用吃到飽　讚的'
+            , other: '早餐其他：小米蛋餅　地點：722台南市佳里區中山路200號店前　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　三姊妹 越南烤乳豬　地址：722台南市佳里區成功路13號（吃辣的推薦加辣，非常爽口！讚的）' } },
+            { id: 'lunch-options', detailsId: 'lunch-details', data: { noodles: '午餐麵食：山水汀麵館　地點：722台南市佳里區光復路256號　（蒜香乾麵超級推，面有嚼勁香）　　　　　　　　　　　　　　　　　　　　外省麵　地點：722台南市佳里區光復路112號　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　外省魯味泡椒炸醬麵　地點：722台南市佳里區延平路66號', rice: '午餐飯食：李家蛋包飯　地址：722台南市佳里區光復路340號　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　', other: '午餐其他：水戶日本料理　地點：722台南市佳里區仁愛路397號　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　憲壽司　地點：722台南市佳里區延平路255號　　　　　　' } },
+            { id: 'dinner-options', detailsId: 'dinner-details', data: { noodles: '晚餐麵食：阪泉麵食館 　地點：722台南市佳里區延平路540號　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　佳里農會邊切仔麵　地點：722台南市佳里區民生街8號　', rice: '晚餐飯食：黃金美 • 食　地點：722台南市佳里區中山路388號　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　燒肉飯　地點：722台南市佳里區進學路224之1號　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　韓國屋　地點：722台南市佳里區新生路309號　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　', other: '晚餐其他：夜堡 佳里店丨宵夜晚餐　地點： 722台南市佳里區成功路152號1樓　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　鰻牛佳里店　地點： 722台南市佳里區崇德街50號　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　佳里北京麻辣鴛鴦火鍋　地點：722台南市佳里區文化路291號　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　' } }
+        ];
+
+        // 切換頁面顯示
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+
+                // 隱藏所有區域
+                sections.forEach(section => section.classList.add('hidden'));
+
+                // 顯示對應的區域
+                const targetId = this.getAttribute('data-target');
+                document.getElementById(targetId).classList.remove('hidden');
+            });
+        });
+
+        // 處理下拉式選單的選擇
+        dropdowns.forEach(dropdown => {
+            const selectElement = document.getElementById(dropdown.id);
+            const detailsElement = document.getElementById(dropdown.detailsId);
+
+            selectElement.addEventListener('change', function() {
+                const value = this.value;
+
+                if (value) {
+                    detailsElement.textContent = dropdown.data[value];
+                    detailsElement.classList.remove('hidden');
+                } else {
+                    detailsElement.textContent = '';
+                    detailsElement.classList.add('hidden');
+                }
+            });
+        });
+
+        // 左側選單開合功能
+        const sidebar = document.getElementById('sidebar');
+        const content = document.getElementById('content');
+        const toggleBtn = document.getElementById('toggle-btn');
+
+        toggleBtn.addEventListener('click', function() {
+            sidebar.classList.toggle('collapsed');
+            content.classList.toggle('expanded');
+        });
+    </script>
+
+</body>
+</html>
